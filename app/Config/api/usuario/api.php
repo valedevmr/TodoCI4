@@ -10,5 +10,6 @@ use CodeIgniter\Router\RouteCollection;
 
 
  $routes->post("/","Users::create");
- $routes->patch("/cp","Users::patchPassword");
- $routes->patch("/cn","Users::index");
+//  $routes->put("/cp","Users::patchPassword");
+ $routes->put('/cp', 'Users::updatePassword');
+ 

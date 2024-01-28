@@ -10,8 +10,6 @@ class Users extends ResourceController
     private $nombrevalido = '/^[a-zA-Z0-9]+$/';
     private $correoValido = '/^[a-zA-Z0-9_-]+@[a-zA-Z0-9-]+\.[a-zA-Z]+$/';
 
-
-
     public function index(): string
     {
 
@@ -36,6 +34,8 @@ class Users extends ResourceController
         $data = $this->request->getJSON();
 
 
+
+   
         if (!isset($data->correo)) {
             return $this->respond(["success" => false, "message" => "El correo es requerido"], 400);
         }
@@ -113,7 +113,7 @@ class Users extends ResourceController
 
 
 
-    public function patchPassword()
+    public function updatePassword()
     {
 
         $data = $this->request->getJSON();
