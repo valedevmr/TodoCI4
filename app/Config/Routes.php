@@ -18,22 +18,20 @@ use CodeIgniter\Router\RouteCollection;
 
 
 //Rutas login
-$routes->post('/api/login','Login::auth');
+$routes->post('/api/login', 'Login::auth');
 
 
 
 //rutas de usuarios
 // $routes->put('/api/usuario/cp', 'Users::updatePassword');
-$routes->post('/api/usuario','Users::create');
+$routes->post('/api/usuario', 'Users::create');
 
 
 
 
 //Rutas para las tareas
-$routes->post('/api/task','Task::create');
-$routes->get('/api/task','Task::index',['filter' => 'authmiddleware']);
-$routes->get('/api/task/(:segment)', 'Task::show/$1');
-$routes->put('/api/task/(:segment)', 'Task::update/$1',['filter' => 'authmiddleware']);
-$routes->delete('/api/task/(:segment)', 'Task::delete/$1');
-
-
+$routes->post('/api/task', 'Task::create', ['filter' => 'authmiddleware']);
+$routes->get('/api/task', 'Task::index', ['filter' => 'authmiddleware']);
+$routes->get('/api/task/(:segment)', 'Task::show/$1', ['filter' => 'authmiddleware']);
+$routes->put('/api/task/(:segment)', 'Task::update/$1', ['filter' => 'authmiddleware']);
+$routes->delete('/api/task/(:segment)', 'Task::delete/$1', ['filter' => 'authmiddleware']);

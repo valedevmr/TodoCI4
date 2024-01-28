@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use App\Implementation\Authentication;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -14,37 +15,27 @@ class AuthMiddleware implements FilterInterface
     {
 
         $response = service('response');
-        $authHeader = $request->getHeader('Authorization');
-        $token = null;
-        if (!$authHeader) {
-            $response->setJSON(["success" => false, "message" => "Usuario invalido, sin autorización"]);
-            $response->setStatusCode(401);
+        $auth = new Authentication();
+        $authR = $auth->vToken($request);
+
+        if (!$authR[0]["success"]) {
+            $response->setJSON($authR[0])->setStatusCode($authR[1]["code"]);
             return $response;
         }
-        if (preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
-            $token = $matches[1];
-        }
-
-        $key_jwt = getenv('KEY_SECRET_JWT');
+      
         try {
-
-            $decoded = JWT::decode($token, new Key($key_jwt, 'HS256'));
-        } catch (\Exception $ex) {
-
-            $response->setJSON(["success" => false, "message" => "Acceso denegado, Token invalido"]);
+            $datajson = $request->getBody();
+            $datos = json_decode($datajson, true);
+            $datos["id_usuario"] = $authR[1]["decoded"]->usuario;
+            $datajson = json_encode($datos);
+            $request->setBody($datajson);
+        } catch (\Throwable $th) {
+            $response->setJSON(["success" => false, "message" => "Ocurri un problema, Contacta con el departamento de sistemas"]);
             $response->setStatusCode(401);
-            return $response;
         }
-
-        $datajson = $request->getBody();
-        $datos = json_decode($datajson, true);
-        $datos["usuario"] = $decoded->usuario;
-        $datajson = json_encode($datos);
-        $request->setBody($datajson);
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-        // Do something here
     }
 }

@@ -21,7 +21,6 @@ class Task extends ResourceController
 
         $data = $this->request->getJSON();
 
-
         if (!isset($data->titulo)) {
             return $this->respond(["success" => false, "message" => "El título es requerido"], 400);
         }
@@ -47,7 +46,7 @@ class Task extends ResourceController
                 'titulo' => $data->titulo,
                 'descripcion' => $descripcion,
                 'tipo' => $data->tipo,
-                'id_usuario' => 1,
+                'id_usuario' => $data->id_usuario,
             ]);
         } catch (\Throwable $th) {
             return $this->respond(["success" => false, "message" => "Ocurrió un problema, intenta más tarde FCT-IT-TC"], 409);
@@ -67,12 +66,14 @@ class Task extends ResourceController
 
     public function index()
     {
+        $data = $this->request->getJSON();
 
-        $usuarios = model(ModelsTask::class)->select('*')
-            ->where('id_usuario', 1)
-            ->where('eliminado', 0)
-            ->get()->getResult();
+        $usuario = [];
         try {
+            $usuarios = model(ModelsTask::class)->select('*')
+                ->where('id_usuario', $data->id_usuario)
+                ->where('eliminado', 0)
+                ->get()->getResult();
         } catch (\Throwable $th) {
             return $this->respond(["success" => false, "message" => "Ocurrió un problema, intenta más tarde FIT-GT-TC"], 409);
         }
@@ -89,12 +90,12 @@ class Task extends ResourceController
 
     public function show($id_task = null)
     {
-
+        $data = $this->request->getJSON();
 
         try {
 
             $usuario = model(ModelsTask::class)->select('titulo,descripcion')
-                ->where('id_usuario', 1)
+                ->where('id_usuario', $data->id_usuario)
                 ->where('eliminado', 0)
                 ->where('id', $id_task)
                 ->first();
@@ -102,6 +103,9 @@ class Task extends ResourceController
             return $this->respond(["success" => false, "message" => "Ocurrió un problema, intenta más tarde FIT-GT-TC"], 409);
         }
 
+        if (!$usuario) {
+            return $this->respond(["success" => false, "message" => "La tarea no existe"], 404);
+        }
         return $this->respond(["success" => true, "message" => "Tarea encontrada", "task" => $usuario], 200);
     }
 
@@ -113,13 +117,6 @@ class Task extends ResourceController
 
     public function update($id_task = null)
     {
-
-        $data = $this->request->getJSON();
-        echo json_encode($data);
-
-        exit;
-
-
 
         $data = $this->request->getJSON();
 
@@ -170,6 +167,22 @@ class Task extends ResourceController
 
 
         try {
+
+            $usuario = model(ModelsTask::class)->select('titulo')
+                ->where('id_usuario', $data->id_usuario)
+                ->where('eliminado', 0)
+                ->where('id', $id_task)
+                ->first();
+        } catch (\Throwable $th) {
+            return $this->respond(["success" => false, "message" => "Ocurrió un problema, intenta más tarde FIT-GT-TC"], 409);
+        }
+
+        if (!$usuario) {
+            return $this->respond(["success" => false, "message" => "La tarea no existe"], 404);
+        }
+
+
+        try {
             model(ModelsTask::class)->where('id', $id_task)->set([
                 'titulo' => $data->titulo,
                 'descripcion' => $data->descripcion,
@@ -194,6 +207,8 @@ class Task extends ResourceController
     public function delete($id_task = null)
     {
 
+        $data = $this->request->getJSON();
+
         if (!$id_task) {
             return $this->respond(["success" => false, "message" => "El ID es requerida"], 400);
         }
@@ -201,9 +216,28 @@ class Task extends ResourceController
             return $this->respond(["success" => false, "message" => "El ID de la tarea debe ser númerico"], 400);
         }
 
+
+        try {
+
+            $usuario = model(ModelsTask::class)->select('titulo')
+                ->where('id_usuario', $data->id_usuario)
+                ->where('eliminado', 0)
+                ->where('id', $id_task)
+                ->first();
+        } catch (\Throwable $th) {
+            return $this->respond(["success" => false, "message" => "Ocurrió un problema, intenta más tarde FIT-GT-TC"], 409);
+        }
+
+        if (!$usuario) {
+            return $this->respond(["success" => false, "message" => "La tarea no existe"], 404);
+        }
+
+
+
         try {
             model(ModelsTask::class)
                 ->where('id', $id_task)
+                ->where('id_usuario', $data->id_usuario)
                 ->set([
                     'eliminado' => 1
                 ])->update();
@@ -211,6 +245,6 @@ class Task extends ResourceController
             return $this->respond(["success" => false, "message" => "Ocurrió un problema, intenta más tarde FIT-GT-TC"], 409);
         }
 
-        return $this->respond(["success" => true, "message" => "Se elimino la tarea con exito"], 200);
+        return $this->respond(["success" => true, "message" => "Tarea eliminada con exito"], 200);
     }
 }
