@@ -14,7 +14,7 @@ class Users extends Model
 
 
 
-    protected $allowedFields = ['nombre', 'correo', 'password', 'fecha_creacion', 'eliminado'];
+    protected $allowedFields = ['nombre', 'correo', 'password', 'fecha_creacion', 'eliminado','fecha_actualizacion'];
 
    
 }

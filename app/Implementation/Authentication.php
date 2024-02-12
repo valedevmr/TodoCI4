@@ -86,7 +86,7 @@ class Authentication implements AuthI
             $decoded = JWT::decode($token, new Key($key_jwt, 'HS256'));
         } catch (\Exception $ex) {
 
-            return [["success" => false, "message" => "Usuario invalido, sin autorizaciónd"],["code"=>401]];
+            return [["success" => false, "message" => "Usuario invalido, sin autorización"],["code"=>401]];
             
         }
 

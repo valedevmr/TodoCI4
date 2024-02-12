@@ -73,6 +73,7 @@ class Task extends ResourceController
             $usuarios = model(ModelsTask::class)->select('*')
                 ->where('id_usuario', $data->id_usuario)
                 ->where('eliminado', 0)
+                ->orderBy('id', 'desc')
                 ->get()->getResult();
         } catch (\Throwable $th) {
             return $this->respond(["success" => false, "message" => "Ocurrió un problema, intenta más tarde FIT-GT-TC"], 409);
