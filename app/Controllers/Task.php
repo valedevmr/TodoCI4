@@ -95,7 +95,7 @@ class Task extends ResourceController
 
         try {
 
-            $usuario = model(ModelsTask::class)->select('titulo,descripcion')
+            $usuario = model(ModelsTask::class)->select('*')
                 ->where('id_usuario', $data->id_usuario)
                 ->where('eliminado', 0)
                 ->where('id', $id_task)
