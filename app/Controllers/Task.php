@@ -11,8 +11,8 @@ class Task extends ResourceController
 {
     private $nombrevalido = '/^[a-zA-Z0-9]+$/';
     private $correoValido = '/^[a-zA-Z0-9_-]+@[a-zA-Z0-9-]+\.[a-zA-Z]+$/';
-    private $estatus = ["creado", "en proceso", "pendiente", "completado"];
-    private $prioridadTipo = ["normal", "regular", "urgente"];
+    private $estatus = ["creada", "en proceso", "pendiente", "finalizada"];
+    private $prioridadTipo = ["normal", "moderada", "urgente"];
     private $user;
 
 
