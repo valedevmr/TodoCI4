@@ -9,7 +9,7 @@ use CodeIgniter\RESTful\ResourceController;
 class Users extends ResourceController
 {
     private $nombrevalido = '/^[a-zA-Z0-9]+$/';
-    private $correoValido = '/^[a-zA-Z0-9_-]+@[a-zA-Z0-9-]+\.[a-zA-Z]+$/';
+    private $correoValido ='/^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/';
 
     public function index()
     {
@@ -33,7 +33,7 @@ class Users extends ResourceController
         if (!$data->correo) {
             return $this->respond(["success" => false, "message" => "El correo es requerido"], 400);
         }
-
+        
         if (!preg_match($this->correoValido, $data->correo)) {
             return $this->respond(["success" => false, "message" => "Correo invalido, solo debe tener numeros, letras, signo($) o _"], 409);
         }
@@ -97,7 +97,7 @@ class Users extends ResourceController
             return $this->respond(["success" => false, "message" => "Ocurrió un problema, intenta más tarde FCU-CU.TC"], 409);
         }
 
-        return $this->respond(["success" => false, "message" => "Usuario creado con exito"], 200);
+        return $this->respond(["success" => true, "message" => "Usuario creado con exito"], 200);
     }
 
 
@@ -254,7 +254,7 @@ class Users extends ResourceController
 
         <body>
             <h1>
-                <a href="urldominio?token=' . $token . '&user=' . $user . '">Cambio de contraseña</a>
+                <a href="http://localhost:5173/sendcp?token=' . $token . '&user=' . $user . '">Cambio de contraseña</a>
             </h1>
         </body>');
 
